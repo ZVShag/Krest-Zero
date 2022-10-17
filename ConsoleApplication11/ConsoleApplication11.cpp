@@ -11,33 +11,44 @@ class Game
 public:
     void create() 
     {
-        cout << "Create game " << endl;
+        cout << "Create game Krestiki-noliki " << endl;
     }
 
     void open(string file) {
         cout << "Open game from " << file << endl;
     }
 
-    void save(string file) {
+    void save(string file) 
+    {
         cout << "Save game in " << file << endl;
     }
 
-    void make_move(string move) {
+    void make_move(string move) 
+    {
         cout << "Make move " << move << endl;
     }
 
 };
+string win[9];
+int z = 0;
+void winner()
+{
+    // 00 01 02
+    // 10 11 12
+    // 20 21 22
+    
+    
+}
 
 
+int getPlayerInput(string prompt) 
+{
 
-string getPlayerInput(string prompt) {
-
-    string input;
-
+    int input;
     cout << prompt;
-
     cin >> input;
-
+    win[input] = "+";
+    z++;
     return input;
 
 }
@@ -91,9 +102,7 @@ class SaveGameCommand : public Command
 {
 
 public:
-
     SaveGameCommand(Game* p) : Command(p) {}
-
     void execute() {
 
         string file_name;
@@ -113,9 +122,7 @@ class MakeMoveCommand : public Command
 {
 public:
     MakeMoveCommand(Game* p) : Command(p) {}
-    void execute() {
-        // Сохраним игру для возможного последующего отката 
-        pgame->save("TEMP_FILE");
+    void execute() { 
         string move;
         move = getPlayerInput("Enter your move:");
         pgame->make_move(move);
@@ -136,7 +143,16 @@ public:
     }
 
 };
-
+void gamemap()
+{
+    
+    for (int i = 0; i < 3; i++)
+    {
+        for (int j = 0; j < 3; j++)
+            cout << win[j] << "\t";
+        cout << endl;
+    }
+}
 
 
 
@@ -148,28 +164,25 @@ int main()
     // Имитация действий игрока 
 
     vector<Command*> v;
-
+    for (int i = 0; i < 9; i++)
+        win[i] = "0";
+    
     // Создаем новую игру  
-
     v.push_back(new CreateGameCommand(&game));
+    
+    for (int i = 0; i < 9; i++)
+    {
+        v.push_back(new MakeMoveCommand(&game));
+        
 
-    // Делаем несколько ходов 
-    v.push_back(new MakeMoveCommand(&game));
-    v.push_back(new MakeMoveCommand(&game));
-    // Последний ход отменяем 
-    v.push_back(new UndoCommand(&game));
-
-    // Сохраняем игру 
-
+    }
     v.push_back(new SaveGameCommand(&game));
 
-
-
     for (size_t i = 0; i < v.size(); ++i)
-
+    {
         v[i]->execute();
-
-
+        gamemap();
+    }
 
     for (size_t i = 0; i < v.size(); ++i)
 
