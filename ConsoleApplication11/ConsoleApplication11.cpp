@@ -44,12 +44,23 @@ void winner()
 int getPlayerInput(string prompt) 
 {
 
-    int input;
+    int input1,input2;
+    
     cout << prompt;
-    cin >> input;
-    win[input] = "+";
+    cin >> input1;
+    if (z % 2 == 0)
+    {
+        win[input1] = "+";
+        cout << "First player win!";
+        exit(0);
+    }
+    else
+    {
+        win[input1] = "-";
+       
+    }
     z++;
-    return input;
+    return input1;
 
 }
 
@@ -146,10 +157,10 @@ public:
 void gamemap()
 {
     
-    for (int i = 0; i < 3; i++)
+    for (int i = 1; i < 11; i++)
     {
-        for (int j = 0; j < 3; j++)
-            cout << win[j] << "\t";
+        cout << win[i-1] << "\t";
+        if (i%3==0)
         cout << endl;
     }
 }
@@ -183,6 +194,7 @@ int main()
         v[i]->execute();
         gamemap();
     }
+    
 
     for (size_t i = 0; i < v.size(); ++i)
 
